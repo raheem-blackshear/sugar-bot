@@ -1,0 +1,48 @@
+<table class="table table-bordered table-condensed table-striped table-hover sbTableStyle" ng-table="sweetLeadsParams">
+      <tr ng-repeat="user in $data">
+        <td width="10%" data-title="'Name'" sortable="'fullName'">{{user.fullName}}</td>
+        <td width="10%" data-title="'Company'" sortable="'company'">{{user.company}}</td>
+        <td width="10%" data-title="'Email'" sortable="'emailAddress'">{{user.emailAddress}}</td>
+        <td width="15%" data-title="'Address'" sortable="'address'">{{user.address?user.address+", ":""}}{{user.city?user.city+", ":""}}{{user.state?user.state+", ":""}}{{user.zipcode?user.zipcode:""}}</td>
+        <td width="8%" data-title="'Phone'" sortable="'phoneNumber'">{{user.phoneNumber}}</td>
+        <td width="8%" data-title="'Affiliation'" sortable="'affiliation'">{{user.affiliation}}</td>
+        <td width="7%" data-title="'Total Spent'" sortable="'spent'">${{user.spent.toFixed(2)}}</td>
+        <td width="7%" data-title="'SugarCash'" sortable="'sugarcash'">${{user.sugarcash.toFixed(2)}}</td>
+        <td width="10%" data-title="'Created On'" sortable="'createdDate'">{{user.createdDate | date:'MM/dd/yyyy h:mma'}}</td>
+        <td width="10%" data-title="'Action'">
+          <a class="btn btn-orange" ng-click="active(user, 0)" ng-if="user.active">Inactive</a>
+          <a class="btn btn-info" ng-click="active(user, 1)" ng-if="!user.active">Active</a>
+          <a class="btn btn-info" ng-click="reopen(user)" ng-if="user.closed">Reopen</a>
+        </td>
+      </tr>
+</table>
+
+  <!-- <table class="panel-body table table-bordered table-condensed table-striped table-hover sbProjectTableStyle" ng-table="sweetLeadsParams">
+      <thead>
+          <tr>
+              <td width="10%">Name</td>
+              <td width="10%">Company</td>
+              <td width="10%">Email</td>
+              <td width="15%">Address</td>
+              <td width="10%">Phone</td>
+              <td width="10%">Status</td>
+              <td width="10%">Stripe Customer ID</td>
+              <td width="15%">Created On</td>
+              <td width="10%">Action</td>
+          </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat="user in users">
+              <td>{{user.fullName}}</td>
+              <td>{{user.company}}</td>
+              <td>{{user.emailAddress}}</td>
+              <td>{{user.address?user.address+", ":""}}{{user.city?user.city+", ":""}}{{user.state?user.state+", ":""}}{{user.zipcode?user.zipcode:""}}</td>
+              <td>{{user.phoneNumber}}</td>
+              <td>{{user.active?"Active":"Inactive"}}</td>
+              <td>{{user.stripeId}}</td>
+              <td>{{user.createdDate | date:'MM/dd/yyyy h:mma'}}</td>
+              <td></td>
+              <a class="btn btn-info" ng-click="editEntry(projectList, currentEntry)">Edit</a>&nbsp;<a class="btn btn-orange" ng-click="removeEntry(projectList, currentEntry)">Remove</a>
+          </tr>
+      </tbody>
+  </table> -->

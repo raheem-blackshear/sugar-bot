@@ -1,0 +1,63 @@
+<div class="container-fluid">
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <legend><p class="headingTextStyle">How can we help you?</p></legend>
+            </fieldset>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input class="form-control" id="name" type="name" name="name"
+                               ng-model="name" placeholder="Your Name *" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input class="form-control" id="email" type="email" name="email"
+                               ng-model="email" placeholder="Your email address *" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input class="form-control" id="phone" type="phone" name="phone"
+                               ng-model="phone" placeholder="Phone Number" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input class="form-control" id="subject" type="subject" name="subject"
+                               ng-model="subject" placeholder="Your Subject *" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <textarea class="form-control" id="message" ng-model="message" placeholder="Your message... *"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <center><button type="button" class="btn btn-info" ng-click="submit();">Submit</button></center>
+                    </div>
+                </div>
+                <div class="row" ng-show="alertMessage">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            <!-- <button class="close" type="button" data-dismiss="alert">&times;</button> -->
+                            <p>{{alertMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="successMessage">
+                    <div class="col-md-12 ">
+                        <div class="alert alert-success">
+                            <button class="close" type="button" data-dismiss="alert">&times;</button>
+                            <p>{{successMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>

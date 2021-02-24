@@ -1,0 +1,1 @@
+db.projectLists.createIndex( { "projectId": 1, 'name': 1 }, { name: "projectLists_projectId_name", unique: true } );

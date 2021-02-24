@@ -1,0 +1,112 @@
+<div class="col-md-7" class="modal-parent">
+    <!-- HIDE
+    <h3>
+        <strong>Sweetness Level: </strong><strong class="sweetnessLevel2">Three Sugar Cubes</strong>
+    </h3>
+    -->
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Merge Lists</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <p>Where would you like to move this list?</p>
+            <select class="form-control"  ng-model="listSelect" ng-options="opt as opt.name for opt in projectList">
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-info" type="button" ng-click="modalMerge()">Merge</button>
+            <button class="btn btn-default" type="button" ng-click="modalCancel()">Cancel</button>
+        </div>
+    </script>
+</div>
+<!--<div class="col-md-12">-->
+    <!--<ul class="breadcrumb">-->
+        <!--<li class="hoverPointer"><a ng-click="goToIndustry()">Step 1: <strong>Industry</strong></a></li>-->
+        <!--<li class="hoverPointer"><a ng-click="goToEvaluate()">Step 2: <strong>Evaluate</strong></a></li>-->
+        <!--<li class="lastBreadcrumb"><a href="#">Step 3: <strong>Projects</strong></a></li>-->
+    <!--</ul>-->
+<!--</div>-->
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h2 class="headingTextStyle">{{projectName}}</h2>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <br>
+    </div>
+</div>
+<div class="row">
+  <div class="form-group">
+      <!--<label for="confProjectName" class="control-label col-md-2">Project Name</label>-->
+      <div class="edit-info">
+          <h1 class="project-name" ng-show="!isEditingName" ng-click="toggleEditName()">
+            <span ng-bind="listName || 'List Name'"></span>
+            <!-- <a ng-click="toggleEditName()" class="btn btn-no-border"><i class="fa fa-pencil"></i></a> -->
+          </h1>
+          <div class="input-wrapper" ng-show="isEditingName">
+              <input type="text" class="form-control" name="listName" id="confProjectName" ng-model="listName" required="required" placeholder="List Name"/>
+          </div>
+          <div class="btn-wrapper" ng-show="isEditingName">
+            <a ng-click="toggleEditName()" class="btn btn-no-border"><i class="fa fa-check"></i></a>
+            <a ng-click="cancelEditName()" class="btn btn-no-border"><i class="fa fa-remove"></i></a>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <button class="btn btn-info" ng-show="hasLists" id="editMergeButton" ng-click="openMergeModal()">Merge</button>
+            <button class="btn btn-default" id="editSaveButton" ng-click="save()">Save</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+            <!-- Table -->
+            <table class="table table-bordered table-condensed table-striped table-hover" ng-table="editParams">
+                <tr ng-repeat="res in $data">
+                    <td title="'Company'" sortable="'company'">{{res.company}}</td>
+                    <td title="'Website'" ng-class="{ 'blur': !hasSubscriptions }"><a href="{{res.website}}" target="_blank">Website Link</a></td>
+                    <td title="'Address'">{{res.address1}}<br/>{{res.address2}}</td>
+                    <td title="'Phone'" sortable="'phone'" ng-class="{ 'blur': !hasSubscriptions }">{{res.phone}}</td>
+                </tr>
+            </table>
+
+    </div>
+</div>
+
+<div class="row" ng-show="saveError">
+    <div class="alert alert-dismissible alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p>{{saveErrorMessage}}</p>
+    </div>
+</div>
+<div class="row" ng-show="showAlert">
+    <div class="col-md-12">
+        <div class="alert alert-warning">
+            <button class="close" type="button" ng-click="dismissAlert()">&times;</button>
+            <p>{{alertMessage}}</p>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="showSuccess">
+    <div class="col-md-12 ">
+        <div class="alert alert-success">
+            <button class="close" type="button" ng-click="dismissSuccess()">&times;</button>
+            <p>{{alertMessage}}</p>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="showMergeSuccess">
+    <div class="col-md-12">
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p>{{alertMessage}}</p>
+        </div>
+    </div>
+</div>

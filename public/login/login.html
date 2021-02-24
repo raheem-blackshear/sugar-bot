@@ -1,0 +1,90 @@
+<div class="container">
+
+     <div class="col-sm-4 col-sm-offset-4">
+       <div ng-if="savedLogin">
+         <div class="row">
+            <div class="wrapper-sweetness">
+                <img src="images/logo.png" class="center-block" alt="sugarbot logo" height="auto" width="164">
+            </div>
+         </div>
+         <div class="row">
+             <button type="button" class="btn btn-info btn-block" id="loginBtn" ng-click="loginSubmit()">Continue As {{emailAddress}}</button>
+         </div>
+         <div class="row">
+             <button type="button" class="btn btn-info btn-block" id="loginBtn" ng-click="loginAsNew()">User Another Account</button>
+         </div>
+       </div>
+       <div ng-if="!savedLogin">
+          
+         <div class="row">
+            <div class="wrapper-sweetness">
+                <img src="images/logo.png" class="center-block" alt="sugarbot logo" height="auto" width="164">
+            </div>
+            <div class="row" ng-if="passwordResetSelected">
+
+                <div class="alert alert-danger alert-dismissable">
+                    <button class="close" data-dismiss="alert">&times;</button>
+                    <p>{{passwordResetResponse}}</p>
+                </div>
+            </div>
+            <div class="row" ng-if="loginInvalid">
+
+                <div class="alert alert-danger alert-dismissable">
+                    <button class="close" ng-click="dismissAlert()">&times;</button>
+                    <p>{{errorMessage}}</p>
+                </div>
+            </div>
+            <div class="form-horizontal login-form">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="control-label" for="emailAddress"></label>
+                        <input type="email" class="form-control" id="emailAddress" name="emailAddress"
+                               ng-model="emailAddress" placeholder="Email" ng-enter="loginSubmit();"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="control-label" for="password"></label>
+                        <input class="form-control" id="password" name="password" ng-model="password"
+                               placeholder="Password" type="password" ng-enter="loginSubmit();"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input id="rememberme" name="rememberme" ng-model="rememberme" type="checkbox"/>
+                        <label class="control-label" for="rememberme">Remember me</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button type="button" class="btn btn-info btn-block" id="loginBtn" ng-click="loginSubmit()">Log In</button>
+        </div>
+        <br>
+        <div class="row">
+            <a href="#" class="btn btn-default btn-block" id="passwordReset" ng-disabled="!(emailAddress)" ng-click="resetPassword()">Reset
+                Password</a>
+        </div>
+      </div>
+
+
+      <div class="row">
+          <div class="loginSeparator">
+              <span class="textInSeparator">or</span>
+          </div>
+      </div>
+
+      <div class="row">
+          <a href="/register" class="btn btn-default btn-block" id="signUpBtn">Sign Up</a>
+      </div>
+
+
+      <div class="row"><br/></div>
+      
+     
+
+    </div>
+
+
+</div>

@@ -1,0 +1,5 @@
+{
+  "connectionString" : "mongodb://sbsmongo.westus2.cloudapp.azure.com:27017/sweetleads",
+  "user" : "sladmin",
+  "pass" : "zaq1xsw2"
+}

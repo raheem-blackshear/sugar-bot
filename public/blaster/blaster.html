@@ -1,0 +1,378 @@
+<br>
+<style>
+  .button-wrapper .form-group {
+    text-align: right;
+  }
+
+  .button-wrapper .form-group .btn-info{
+    min-width: 80px;
+    padding: 5px 10px;
+  }
+</style>
+<div class="container-fluid">
+    <div class="blaster-section">
+      <div class="row" ng-show="alertMessage">
+          <div class="col-md-12">
+              <div class="alert alert-warning">
+                  <!-- <button class="close" type="button" data-dismiss="alert">&times;</button> -->
+                  <p>{{alertMessage}}</p>
+              </div>
+          </div>
+      </div>
+      <div class="row" ng-show="successMessage">
+          <div class="col-md-12 ">
+              <div class="alert alert-success">
+                  <button class="close" type="button" data-dismiss="alert">&times;</button>
+                  <p>{{successMessage}}</p>
+              </div>
+          </div>
+      </div>
+    <!-- <div class="blaster-section" ng-show="subscriptions && subscriptions.length > 0"> -->
+      <ul class="nav nav-tabs nav-justified">
+          <!-- <li ng-class="showEmailTab?'active':''" ng-if="showEmailTab"><a data-target="#email" data-toggle="tab" ng-click="initializeTab()">Email</a></li> -->
+          <li ng-class="showEmailTab?'':'active'"><a data-target="#postcard" data-toggle="tab" ng-click="initializeTab()">Postcard</a></li>
+          <li><a data-target="#letter" data-toggle="tab" ng-click="initializeTab()">Letter</a></li>
+      </ul><br>
+      <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" ng-class="showEmailTab?'in active':''" id="email">
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="selectedTemplateId" class="form-control" ng-change="selectTemplate('Email');">
+                              <option value="">+New</option>
+                              <option ng-repeat="template in templates" value="{{template._id}}">{{template.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <input class="form-control" id="name" type="text" name="name" ng-model="template.name" placeholder="Template Name" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                        <input class="form-control input-date" ng-model="template.datetime" placeholder="Select a date..." moment-picker="template.datetime" min-date="startDate" readonly>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="template.projectId" class="form-control">
+                              <option value="">Select Project</option>
+                              <option ng-repeat="project in projectTable" value="{{project._id}}">{{project.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6 button-wrapper">
+
+              </div>
+          </div>
+          <div class="row">
+              <div class="form-horizontal">
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="sender" type="text" name="sender"
+                                 ng-model="template.sender" placeholder="Sender"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="subject" type="text" name="subject"
+                                 ng-model="template.subject" placeholder="Subject"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <img src="/images/icons/toggle_icon.png" class="toggleToolbar" ng-click="toggleToolbar();">
+                          <div text-angular="text-angular" name="htmlContent" ng-model="template.html" ta-disabled='false'></div>
+                      </div>
+                      <div class="col-md-12 hAlignRight">
+                          <a class="btn-savedraft" ng-click="saveTemplate('Email');">Save Draft</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-add" ng-click="sendTemplate('Email');">Send Now</button>
+            <!-- <button type="button" class="btn btn-add" ng-click="saveTemplate('Email');">Save</button> -->
+          </div>
+        </div>
+        <div class="tab-pane fade" ng-class="showEmailTab?'':'in active'" id="postcard">
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="selectedPostcardTemplateId" class="form-control" ng-change="selectTemplate('Postcard');">
+                              <option value="">+New</option>
+                              <option ng-repeat="template in postcardTemplates" value="{{template.id}}">{{template.metadata.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <input class="form-control" id="name" type="text" name="name" ng-model="postcardTemplate.metadata.name" placeholder="Template Name" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                        <input class="form-control input-date" ng-model="poastcardTemplate.metadata.datetime" placeholder="Select a date..." moment-picker="postcardTemplate.metadata.datetime" min-date="startDate" readonly>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="postcardTemplate.metadata.projectId" class="form-control">
+                              <option value="">Select Project</option>
+                              <option ng-repeat="project in projectTable" value="{{project._id}}">{{project.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <input class="form-control" id="subject" type="text" name="description"
+                                 ng-model="postcardTemplate.description" placeholder="Description"/>
+                      </div>
+                  </div>
+              </div>
+            
+              <div class="col-md-6 logo-wrapper">
+                <div class="form-group">
+                    <!-- <h4>Front Side Image</h4> -->
+                     <!-- <div class="">
+                        <input id="logo" name="logo" type="file" onchange="angular.element(this).scope().previewFront(event);"/>
+                        <img class="preview-logo" src="{{postcardFront}}" width="200px">
+                        <a ng-click="cancelFrontImage()" class="btn btn-no-border" ng-if="postcardFront"><i class="fa fa-remove"></i></a>
+                    </div>  -->
+
+                  
+
+                    <div class="file-upload">
+                      <div class="image-upload-wrap">
+                        <input class="file-upload-input" 
+                          type='file' 
+                          onchange="angular.element(this)
+                          .scope()
+                          .previewFront(event);" 
+                          accept="image/*" />
+
+                        <div class="drag-text">
+                          <img src="images/icons/upload_icon.png"><br>
+                          <h3>Front Image</h3>
+                          <p>No file chosen</p>
+                          <p class="image-credentials">Image dimension should be 1275px x 1875px.</p>
+                        </div>
+                      </div>
+                      <div class="file-upload-content">
+                        <img class="file-upload-image" src="{{postcardFront}}" alt="your image" />
+                        <div class="image-title-wrap">
+                          <button type="button" ng-click="cancelFrontImage()" class="remove-image">Remove Image</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- <h4>Address</h4> -->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="postcardAddress" class="form-control" name="postcardAddress" type="text" placeholder="Address" ng-model="postcardTemplate.metadata.address.address"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="postcardcity" class="form-control" name="postcardcity" type="text" placeholder="City" ng-model="postcardTemplate.metadata.address.city"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="postcardstate" class="form-control" name="postcardstate" type="text" placeholder="State" ng-model="postcardTemplate.metadata.address.state"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="postcardzipcode" class="form-control" name="postcardzipcode" type="text" placeholder="Zipcode" ng-model="postcardTemplate.metadata.address.zipcode"/>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-2 button-wrapper">
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="previewTemplate('Postcard');">Preview</button>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="sendTemplate('Postcard');">Send</button>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="saveTemplate('Postcard');" ng-if="!postcardTemplate.id">Save</button>
+                      </div>
+                  </div>
+              </div> -->
+          </div>
+          <div class="row">
+              <div class="form-horizontal">
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <img src="/images/icons/toggle_icon.png" class="toggleToolbar" ng-click="toggleToolbar();">
+                          <div text-angular="text-angular" name="postcardHtmlContent" ng-model="postcardTemplate.html" ta-disabled='false'></div>
+                      </div>
+                      <div class="col-md-12 hAlignRight">
+                          <a class="btn-savedraft" ng-click="saveTemplate('Postcard');" ng-if="!postcardTemplate.id">Save Draft</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-add" ng-click="previewTemplate('Postcard');">Preview</button>&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-add" ng-click="sendTemplate('Postcard');">Send Now</button>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="letter">
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="selectedLetterTemplateId" class="form-control" ng-change="selectTemplate('Letter');">
+                              <option value="">+New</option>
+                              <option ng-repeat="template in letterTemplates" value="{{template.id}}">{{template.metadata.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <input class="form-control" id="name" type="text" name="name" ng-model="letterTemplate.metadata.name" placeholder="Template Name" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                        <input class="form-control input-date" ng-model="letterTemplate.metadata.datetime" placeholder="Select a date..." moment-picker="letterTemplate.metadata.datetime" min-date="startDate" readonly>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <select ng-model="letterTemplate.metadata.projectId" class="form-control">
+                              <option value="">Select Project</option>
+                              <option ng-repeat="project in projectTable" value="{{project._id}}">{{project.name}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                            <input class="form-control" id="subject" type="text" name="description"
+                                     ng-model="letterTemplate.description" placeholder="Description"/>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6 logo-wrapper">
+                <div class="form-group">
+                    <!-- <h4>Logo</h4>
+                    <div class="">
+                        <input id="logo" name="logo" type="file" onchange="angular.element(this).scope().previewLogo(event);"/>
+                        <img class="preview-logo" src="{{letterLogo}}" width="80px">
+                        <a ng-click="cancelLogo()" class="btn btn-no-border" ng-if="letterLogo"><i class="fa fa-remove"></i></a>
+                    </div> -->
+                    
+                    <div class="file-upload">
+                      <div class="image-upload-wrap">
+                        <input class="file-upload-input" type='file' onchange="angular.element(this).scope().previewLogo(event);" accept="image/*" />
+                        <div class="drag-text">
+                          <img src="images/icons/upload_icon.png"><br>
+                          <h3>Logo</h3>
+                          <p>No file chosen</p>
+                          <p class="image-credentials">Logo dimension should be 400px x 400px.</p>
+                        </div>
+                      </div>
+                      <div class="file-upload-content">
+                        <img id="letterImage" class="file-upload-image" src="{{letterLogo}}" alt="your image" />
+                        <div class="image-title-wrap">
+                          <span class="cropButtonWrapper"><button type="button" ng-click="cropLogo()" class="btn-add">Crop Logo</button>&nbsp;&nbsp;&nbsp;</span>
+                          <button type="button" ng-click="cancelLogo()" class="remove-image">Remove Logo</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- <h4>Address</h4> -->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="letterAddress" class="form-control" name="letterAddress" type="text" placeholder="Address" ng-model="letterTemplate.metadata.address.address"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="lettercity" class="form-control" name="lettercity" type="text" placeholder="City" ng-model="letterTemplate.metadata.address.city"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="letterstate" class="form-control" name="letterstate" type="text" placeholder="State" ng-model="letterTemplate.metadata.address.state"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input id="letterzipcode" class="form-control" name="letterzipcode" type="text" placeholder="Zipcode" ng-model="letterTemplate.metadata.address.zipcode"/>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-2 button-wrapper">
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="previewTemplate('Letter');">Preview</button>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="sendTemplate('Letter');">Send</button>
+                      </div>
+                  </div>
+                  <div class="form-horizontal">
+                      <div class="form-group">
+                          <button type="button" class="btn btn-info" ng-click="saveTemplate('Letter');" ng-if="!letterTemplate.id">Save</button>
+                      </div>
+                  </div>
+              </div> -->
+          </div>
+          <div class="row">
+              <div class="form-horizontal">
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <img src="/images/icons/toggle_icon.png" class="toggleToolbar" ng-click="toggleToolbar();">
+                          <div text-angular="text-angular" name="letterHtmlContent" ng-model="letterTemplate.html" ta-disabled='false'></div>
+                      </div>
+                      <div class="col-md-12 hAlignRight">
+                          <a class="btn-savedraft" ng-click="saveTemplate('Letter');" ng-if="!letterTemplate.id">Save Draft</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-add" ng-click="previewTemplate('Letter');">Preview</button>&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-add" ng-click="sendTemplate('Letter');">Send Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- <div class="row" ng-show="subscriptions && subscriptions.length==0">
+        <div class="col-md-12">
+          <p>Please upgrade your account to use this page.</p>
+        </div>
+        <div class="col-md-12">
+          <button type="button" class="btn btn-info" ng-click="upgrade()">Upgrade</button>
+        </div>
+    </div> -->
+
+</div>

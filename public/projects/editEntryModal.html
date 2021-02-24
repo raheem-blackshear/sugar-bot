@@ -1,0 +1,99 @@
+<div class='entry-detail'>
+    <h5>Entry Details</h5>
+    <button type="button" class="close" ng-click="cancel();">&times;</button>
+    <div class='entry-detail-content'>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+                <label class="" for="Name">Name</label>
+                <div class="">
+                    <input class="form-control" id="Name" name="Name" ng-model="changedName" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="company">Company</label>
+                <div class="">
+                    <input class="form-control" id="company" name="company" ng-model="changedCompany" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="website">Website Url</label>
+                <div class="">
+                    <input class="form-control" id="website" type="text" name="website" ng-model="changedWebsite"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="email">Email Address</label>
+                <div class="">
+                    <input class="form-control" id="email" type="email" name="email" ng-model="changedEmail"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="address1">Address1</label>
+                <div class="">
+                    <input class="form-control" id="address1" name="address1" ng-model="changedAddress1" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="address1">Address2</label>
+                <div class="">
+                    <input class="form-control" id="address2" name="address2" ng-model="changedAddress2" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="city">City</label>
+                <div class="">
+                    <input class="form-control" id="city" name="city" ng-model="changedCity" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="state">State</label>
+                <div class="">
+                    <input class="form-control" id="state" name="state" ng-model="changedState" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="zipcode">Zipcode</label>
+                <div class="">
+                    <input class="form-control" id="zipcode" name="zipcode" ng-model="changedZipcode" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="country">Country</label>
+                <div class="">
+                    <input class="form-control" id="country" name="country" ng-model="changedCountry" type="text"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="" for="phone">Phone</label>
+                <div class="">
+                    <input class="form-control" id="phone" name="phone" ng-model="changedPhone" type="text"/>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="button-wrapper">
+        <center><button type="button" class="btn btn-info" ng-click="updateEntry();">Edit</button></center>
+    </div>
+</div>
+<style>
+  .entry-detail h5 {
+    background: #eee;
+    margin: 0px;
+    padding: 20px;
+    font-weight: bold;
+    color: gray;
+  }
+  .entry-detail button.close {
+    position: absolute;
+    right: 15px;
+    top: 20px;
+  }
+  .entry-detail .entry-detail-content {
+    margin: 30px;
+  }
+  .entry-detail .button-wrapper {
+    margin: 30px;
+  }
+</style>

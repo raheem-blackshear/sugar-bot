@@ -1,0 +1,544 @@
+<br>
+<div class="container-fluid">
+    <ul class="nav nav-tabs nav-justified">
+        <li ng-class='{"active":activeTab=="Profile"}'><a data-target="#profile" data-toggle="tab">Profile</a></li>
+        <li ng-class='{"active":activeTab=="SugarCash"}'><a data-target="#sugarCash" data-toggle="tab">Sugar Cash</a></li>
+        <li ng-class='{"active":activeTab=="Billing"}'><a data-target="#billing" data-toggle="tab">Billing &amp; Invoice</a></li>
+        <!-- <li ng-class='{"active":activeTab=="Subscriptions"}'><a data-target="#subscriptions" data-toggle="tab">Subscriptions</a></li> -->
+        <li ng-class='{"active":activeTab=="CRM"}'><a data-target="#crm" data-toggle="tab">CRM</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" ng-class='{"in active":activeTab=="Profile"}' id="profile">
+          <div class="row">
+            <div class='profile-container'>
+                <div class='profile-page-title'>
+                </div>
+                <div class='profile-item row' ng-show='!updating'>
+                    <div class='col-md-9'>
+                        <div class="form-group">
+                          <img src='{{logo}}' width='80px' />
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="fullName">Full Name</label>
+                            <div> {{fullName}} </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="company">Company</label>
+                            <div> {{company}} </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="emailAddress">Email Address</label>
+                            <div> {{emailAddress}} </div>
+                        </div>
+                        <div class="form-group" ng-show="address || city || state || zipcode">
+                            <label class="" for="state">Address</label>
+                            <div> {{address?(address + ", "):""}}{{city?(city+", "):""}}{{state?states[state]+", ":""}}{{zipcode?zipcode:""}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="affiliation">Affiliation</label>
+                            <div> {{affiliation}} </div>
+                        </div>
+                        <!-- <div class="form-group" ng-show="city">
+                            <label class="" for="city">City</label>
+                            <div> {{city}} </div>
+                        </div>
+                        <div class="form-group" ng-show="state">
+                            <label class="" for="state">State</label>
+                            <div> {{states[state]}} </div>
+                        </div>
+                        <div class="form-group" ng-show="zipcode">
+                            <label class="" for="zipcode">Zipcode</label>
+                            <div> {{zipcode}} </div>
+                        </div> -->
+                        <div class="form-group" ng-if="phoneNumber">
+                            <label class="" for="phoneNumber">Phone Number</label>
+                            <div> {{phoneNumber}} </div>
+                        </div>
+                        <!-- <div class="form-group" ng-show="dateOfBirth">
+                            <label class="" for="dateOfBirth">Birthday</label>
+                            <div> {{(dateOfBirth | date:'MM/dd/yyyy') || ''}} </div>
+                        </div> -->
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-info pull-right saveProfile" ng-click="profileUpdate()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+                <div class='row' ng-show='updatingProfile'>
+                    <div>
+                        <h4 class='profile-name-caption'>Profile</h4>
+                    </div>
+                    <div class='col-md-9'>
+                        <div class="form-group">
+                            <label class="" for="logo">Logo</label>
+                            <div class="">
+                                <input id="logo" name="logo" type="file" onchange="angular.element(this).scope().previewLogo(event);"/>
+                                <img class="preview-logo" src="{{changedLogo}}" width="80px">
+                                <a ng-click="cancelLogo()" class="btn btn-no-border" ng-if="changedLogo"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="fullName">Full Name</label>
+                            <div class="">
+                                <input class="form-control" id="fullName" name="fullName" ng-model="changedFullName"
+                                    type="fullName"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="company">Company</label>
+                            <div class="">
+                                <input class="form-control" id="company" name="company" ng-model="changedCompany"
+                                    type="company"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="emailAddress">Email Address</label>
+                            <div class="">
+                                <input class="form-control" id="emailAddress" type="email" name="emailAddress"
+                                    ng-model="changedEmailAddress" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="address">Address</label>
+                            <div class="">
+                                <input class="form-control" id="address" name="address" ng-model="changedAddress"
+                                    type="address"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="city">City</label>
+                            <div class="">
+                                <input class="form-control" id="city" name="city" ng-model="changedCity"
+                                    type="city"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="state">State</label>
+                            <div class="">
+                              <select class="form-control" name="state" id="state" ng-model="changedState">
+                                <option value="">Select State</option>
+                                <option ng-repeat="(key, value) in states" value="{{key}}">{{value}}</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="company">Zipcode</label>
+                            <div class="">
+                                <input class="form-control" id="zipcode" name="zipcode" ng-model="changedZipcode"
+                                    type="zipcode"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="company">Affiliation</label>
+                            <div class="">
+                              <select class="form-control" name="affiliation" id="affiliation" ng-model="changedAffiliation">
+                                <option value="">Select Affiliation</option>
+                                <option value="MassChallange">MassChallange</option>
+                                <option value="Start-Up Grind">Start-Up Grind</option>
+                                <option value="TechStars">TechStars</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="phoneNumber">Phone Number</label>
+                            <div class="">
+                                <input class="form-control" id="phoneNumber" name="phoneNumber"
+                                    ng-model="changedPhoneNumber"
+                                    type="phoneNumber"/>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="" for="dateOfBirth">Birthday</label>
+                            <div class="">
+                                <input class="form-control" id="dateOfBirth" name="dateOfBirth"
+                                    ng-model="changedDateOfBirth"
+                                    type="date"/>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="col-md-2">
+                        <div class='pull-right save-cancel-group'>
+                            <button class="btn btn-info" ng-click="profileSubmit()">
+                                Save
+                            </button>
+                            <button class="btn btn-info"
+                                        ng-click="backToAccount()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class='profile-item row' ng-show='!updating'>
+                    <div>
+                        <h4 class='profile-name-caption'>Password</h4>
+                    </div>
+                    <div class='col-md-9'>
+
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-info updateButton pull-right"
+                                ng-click="passwordUpdate()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+                <div class='row' ng-show='updatingPassword'>
+                    <div>
+                        <h4 class='profile-name-caption'>Password</h4>
+                    </div>
+                    <div class="col-md-9" id="passwordGroup">
+                        <div class="form-group">
+                            <label class="" for="password">Old Password</label>
+                            <div class="">
+                                <input class="form-control" id="password" name="password"
+                                        ng-model="password"
+                                        type="password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="password">New Password</label>
+                            <div class="">
+                                <input class="form-control" id="passwordNew" name="password"
+                                        ng-model="passwordNew"
+                                        type="password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="" for="passwordConfirm">Confirm
+                                Password</label>
+                            <div class="">
+                                <input class="form-control" id="passwordConfirm" name="passwordConfirm"
+                                        ng-model="passwordConfirm"
+                                        type="password"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class='pull-right save-cancel-group'>
+                            <button class="btn btn-info updateButton"
+                                    ng-click="passwordSubmit()">
+                                Save
+                            </button>
+                            <button class="btn btn-info updateButton"
+                                    ng-click="backToAccount()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-7 passwordAlert" ng-show="showPasswordAlert">
+                            <div class="alert alert-success">
+                                <button type="button" class="close" ng-click="dismissAlert()">&times;</button>
+                                <p>Password changed!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-7 passwordAlert" ng-show="showPasswordMatchError">
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" ng-click="dismissAlert()">&times;</button>
+                                <p>Oops! Old password is incorrect or new password did not match; please try again.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-7 passwordAlert" ng-show="showPasswordLengthError">
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" ng-click="dismissAlert()">&times;</button>
+                                <p>Oops! Passwords must be greater than 8 characters with 1 number, 1 uppercase character, 1 lowercase character, and one special character.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='profile-item row' ng-show='!updating'>
+                    <div>
+                        <h4 class='profile-name-caption'>Record Storage</h4>
+                        <!-- <p ng-show="subscriptions && subscriptions.length==0">{{(totalRecords/1024).toFixed(2)+"MB"}} of 1MB ({{(totalRecords/1024*100).toFixed(2)}}%)</p> -->
+                        <!-- <p ng-show="subscriptions && subscriptions.length>0">{{(totalRecords/1024).toFixed(2)+"MB"}} - Unlimited</p> -->
+                        <!-- <p>{{(totalRecords/1024).toFixed(2)+"MB"}}</p> -->
+                    </div>
+                    <div class='col-md-9'>
+
+                    </div>
+                    <div class="col-md-2">
+                        <p class="pull-right">{{(totalRecords/1024).toFixed(2)+"MB"}}</p>
+                        <!-- <button class="btn btn-info updateButton pull-right" ng-click="goPro()" ng-show="subscriptions && subscriptions.length==0">Go Pro</button> -->
+                    </div>
+                </div>
+                <div class='profile-item row' ng-show='!updating'>
+                    <div>
+                        <h4 class='profile-name-caption'>Close Account</h4>
+                        <!-- <p ng-show="subscriptions && subscriptions.length==0">{{(totalRecords/1024).toFixed(2)+"MB"}} of 1MB ({{(totalRecords/1024*100).toFixed(2)}}%)</p> -->
+                        <!-- <p ng-show="subscriptions && subscriptions.length>0">{{(totalRecords/1024).toFixed(2)+"MB"}} - Unlimited</p> -->
+                    </div>
+                    <div class='col-md-9'>
+
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-info updateButton pull-right" ng-click="closeAccount()">Close</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="tab-pane fade" ng-class='{"in active":activeTab=="Subscriptions"}' id="subscriptions">
+            <div class="row">
+                <br>
+            </div>
+            <div class="row" ng-show="subscriptionSaveError">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{{subscriptionSaveErrorMessage}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="subscriptionSaveSuccessMessage">
+                <div class="col-md-12 ">
+                    <div class="alert alert-success">
+                        <button class="close" type="button" data-dismiss="alert">&times;</button>
+                        <p>{{subscriptionSaveSuccessMessage}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-info subscription-panel">
+              <h2><center>Pricing</center></h2><br>
+              <h4><center>No Contracts, Just the Ability to Build Sweet Data Records</center></h4><br>
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                  <h4><center>FREE $0</center></h4><br>
+                  <ul>
+                    <li>Access to Every Data Source</li>
+                    <li>1 MB of Record Storage</li>
+                    <li>Unlimited Projects</li>
+                    <li>Unlimited use of Blaster</li>
+                  </ul>
+                  <p><center>Great option for getting started!</center></p>
+                  <br>
+                  <center ng-show="subscriptions.length>0"><button type="button" class="btn btn-info" ng-click="seletSubscription(0);">get Free</button></center>
+                  <center ng-show="subscriptions.length==0"><font color="green"><b>Current Plan</b></font></center>
+                </div>
+                <div class="col-md-5">
+                  <h4><center>PRO SUBSCRIPTION $99/mo.</center></h4><br>
+                  <ul>
+                    <li>Access to Every Data Source</li>
+                    <li>Unlimited Record Storage</li>
+                    <li>Unlimited Projects</li>
+                    <li>Unlimited use of Blaster</li>
+                    <li>Exportability: CRM integration and CSV file creation</li>
+                  </ul><br>
+                  <center ng-show="subscriptions.length==0"><button type="button" class="btn btn-info" ng-click="seletSubscription(1);">go Pro</button></center>
+                  <center ng-show="subscriptions.length>0" color="green"><font color="green"><b>Current Plan</b></font></center>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+        </div> -->
+        <div class="tab-pane fade" ng-class='{"in active":activeTab=="SugarCash"}' id="sugarCash">
+            <div class="row">
+                <br>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend>
+                          <p class="headingTextStyle" style='width: 50%; float: left;'>Sugar Cash Tiers</p>
+                          <div class="pull-right" style='font-size: 16px; padding-top: 10px;'>
+                            Coupons supersede Sugar Cash, so choose wisely
+                          </div>
+                        </legend>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                  <table class="table table-hover table-sugarcash-tier">
+                      <thead>
+                          <tr>
+                              <td width="60%">Dollars Spent</td>
+                              <td width="40%">Sugar Cash Earned</td>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr><td>$20</td><td>$1 Sugar Cash</td></tr>
+                          <tr><td>$50</td><td>$5 Sugar Cash</td></tr>
+                          <tr><td>$100</td><td>$15 Sugar Cash</td></tr>
+                          <tr><td>$250</td><td>$50 Sugar Cash</td></tr>
+                          <tr><td>$500+</td><td>$125+ Sugar Cash</td></tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend><p class="headingTextStyle">Sugar Cash Transaction History</p></legend>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row" ng-show="credits.length==0">
+                <p><center>There are no transactions.</center></p>
+            </div>
+            <table class="table table-bordered table-condensed table-striped table-hover sbTableStyle" ng-table="sweetLeadsParams">
+                  <tr ng-repeat="credit in $data">
+                    <td width="5%" data-title="'No'">{{$index+1}}</td>
+                    <td width="25%" data-title="'Amount'" sortable="'amount'">${{credit.amount.toFixed(2)}}</td>
+                    <td width="30%" data-title="'Description'" sortable="'description'">{{credit.description}}</td>
+                    <td width="25%" data-title="'Paid On'" sortable="'updatedDate'">{{credit.updatedDate | date:'MM/dd/yyyy h:mma'}}</td>
+                    <td width="25%" data-title="'Action'">
+                    </td>
+                  </tr>
+            </table>
+        </div>
+        <div class="tab-pane fade" ng-class='{"in active":activeTab=="Billing"}' id="billing">
+            <div class="row">
+                <br>
+            </div>
+            <div class="row" ng-show="billingSaveError">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{{billingSaveErrorMessage}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend><p class="headingTextStyle">Billing Method</p></legend>
+                    </fieldset>
+                    <button class="btn btn-info" id="methodButton" ng-click="openMethodModal(null)">Manage</button>
+                </div>
+            </div>
+            <div class="row" ng-hide="stripeInfo.sources.data.length > 0">
+                <p><center>There is no billing method yet.</center></p>
+            </div>
+            <table class="panel-body table table-bordered table-condensed table-striped table-hover stripeCardTable" ng-show="stripeInfo.sources.data.length>0">
+                <thead>
+                    <tr>
+                        <td width="40%">Card Number</td>
+                        <td width="20%">Type</td>
+                        <td width="20%">Expire Date</td>
+                        <td width="20%">Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="source in stripeInfo.sources.data">
+                        <td>Card ending in {{source.last4}}</td>
+                        <td>{{source.brand}}</td>
+                        <td>{{source.exp_month}}/{{source.exp_year}}</td>
+                        <td><button class="btn btn-orange" ng-click="removeMethod(source);">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend><p class="headingTextStyle">Invoices</p></legend>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row" ng-show="charges.length==0">
+                <p><center>There is no invoices.</center></p>
+            </div>
+            <table class="panel-body table table-bordered table-condensed table-striped table-hover stripeCardTable" ng-show="charges.length>0">
+                <thead>
+                    <tr>
+                        <td width="40%">Invoice Number</td>
+                        <td width="20%">Amount</td>
+                        <td width="20%">Paid Date</td>
+                        <td width="20%">Download</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="charge in charges">
+                        <td>{{charge.balance_transaction}}</td>
+                        <td>${{(charge.amount/100).toFixed(2)}}</td>
+                        <td>{{(charge.created*1000) | date : 'MMM d, y'}}</td>
+                        <td><a href="{{charge.receipt_url}}" target="_blank">Receipt Link</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" ng-class='{"in active":activeTab=="CRM"}' id="crm">
+            <div class="row">
+                <br>
+            </div>
+            <div class="row" ng-show="crmSaveError">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{{crmSaveErrorMessage}}</p>
+                    </div>
+                </div>
+            </div>
+            <form name="pardotForm">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-5 control-label" for="pardotEmail">Pardot Email</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" id="pardotEmail" name="pardotEmail" ng-model="pardotEmail"
+                                           type="email" placeholder="Pardot email" required="required"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label" for="pardotKey">User Key</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" id="pardotKey" name="pardotKey" ng-model="pardotKey"
+                                           type="text" placeholder="User key" required="required"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label" for="pardotPassword">Pardot Password</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" id="pardotPassword" name="pardotPassword" ng-model="pardotPassword"
+                                           type="password" placeholder="Pardot password" required="required"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-7 profileAlert" ng-show="crmShowAlert">
+                                        <div class="alert alert-success">
+                                            <button class="close" type="button" ng-click="crmDismissAlert()">&times;
+                                            </button>
+                                            <p>Settings Saved!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-offset-11">
+                                    <button class="btn btn-info saveProfile pull-right" ng-click="pardotSubmit()"
+                                            ng-disabled="!(pardotForm.pardotKey.$valid &amp;&amp; pardotForm.pardotEmail.$valid &amp;&amp; pardotForm.pardotPassword.$valid)">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

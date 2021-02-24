@@ -1,0 +1,188 @@
+<div class="row">
+    <div class="col-md-7" class="modal-parent">
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">How to Sync with Pardot</h3>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <p>You need the following information from Pardot:</p>
+                <ol>
+                    <li>Your Pardot email address</li>
+                    <li>Your Pardot password</li>
+                    <li>Your Pardot API User Key found at Settings -> My Profile</li>
+                </ol>
+                <p>These values must be entered into Settings -> CRM. This message will not appear once the values are saved. The export button will work, and your data will be exported to Pardot.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" ng-click="$scope.modalCancel()">Ok</button>
+            </div>
+        </script>
+    </div>
+</div>
+
+
+<div id="project-list">
+  <div class="row">
+    <div class="col-md-3 projects-description">
+        <h3 class="headingTextStyle">Recent Projects</h3> 
+    </div>
+    <div class="col-md-4 projects-description">
+        <h3 class="headingTextStyle">Select a Tile to Blast</h3>    
+    </div>
+    <div class="col-md-3">
+      <h3 class="purchaseTextStyle"><span ng-click="addProject()">Add a Project&nbsp;&nbsp;<img ng-click="addProject()" src="/images/icons/add_icon.png" width="30px" height="30px"></span></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <div class="projects-panel">
+            <table>
+                <tr>
+                    <td ng-repeat="project in projectTable" ng-class="projectClass(this)">
+                        <div class="project-info">
+                            <div class="project-name" ng-click="selectProject(project)">
+                                {{project.name}}
+                                <button type="button" class="close" ng-click="removeSelectedProject(project); $event.stopPropagation();">&times;</button>
+                            </div>
+                            <div class="project-contact" ng-click="selectProject(project)">
+                                <p>{{project.totalContacts}}</p>
+                                Contacts
+                            </div>
+                            <div class="project-datasources" ng-click="selectProject(project)">
+                                <b>{{project.dataSourcesCount}} Data Sources</b>
+                                <hr>
+                                <b>{{project.projectListsCount}} Lists</b><br>
+                                <font size="1">Last Update: {{ago(project.updatedDate)}}</font>
+                            </div>
+                            <center><button type="button" class="btn btn-add" ng-click="addList(project);">Add More</button></center>
+                            <!-- <center><button type="button" class="btn btn-add" ng-click="export(project);">Export</button></center> -->
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- <div class="col-md-2 project-add">
+        <div>
+            <div class="plus-btn" ng-click="addProject()">
+                +
+            </div>
+            Add Project
+        </div>
+    </div> -->
+</div>
+
+<div class="row" ng-if="selectedProjectListId != -1">
+    <div class="col-md-12 project-details">
+        <!--h3 class="headingTextStyle">{{projectName || '&nbsp;'}}</h3-->
+        <div class="panel panel-info tab-controller">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-6 no-padding">
+                    <h3 class="hAlignLeft">Project: {{projectName || '&nbsp'}}</h3>
+                </div>
+                <div class="col-md-6 no-padding">
+                    <h3 class="purchaseTextStyle"><span ng-click="onBlaster()"><b>Continue to Blaster </b><img ng-click="addProject()" src="/images/icons/next_step_icon.png" width="30px" height="30px"></span></h3>
+                </div>
+              </div>
+              <div class="row lists-row">
+                <div class="col-md-1 no-padding">
+                  <h4>Lists:</h4>
+                </div>
+                <div class="col-md-8 no-padding">
+                  <ul class="nav nav-tabs nav-justified">
+                      <li ng-repeat = "projectList in projectListTable" ng-class='{"active":selectedProjectListId==projectList._id}'><a href="#" ng-click="selectProjectList(projectList._id)" style="text-align: left;">{{projectList.name}}</a></li>
+                  </ul>
+                </div>
+                <div class="col-md-3 no-padding hAlignRight">
+                  <button type="button" class="btn btn-add" ng-click="export(project);">Export</button>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="panel-content tab-contents">
+                <div id="myTabContent" class="tab-content">
+                    <div ng-repeat = "projectList in projectListTable" class="tab-pane fade" ng-class='{"in active":selectedProjectListId==projectList._id}' id="{{projectList._id}}">
+                      <div class="project-list-info">
+                        <!-- <div class="row">
+                            <div class="col-md-6">
+                                <div class="contacts">
+                                    <p>{{projectList.entries.length}}</p>
+                                    Contacts
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="control-btns">
+                                    <button class="btn btn-info" ng-click="onAddList(projectList)">Add List</button>
+                                    <button class="btn btn-info" ng-click="onBlaster()">Blaster</button>
+                                    <button class="btn btn-info" ng-click="onEdit()">Edit</button>
+                                    <button class="btn btn-info" ng-click="onCRM()">CRM</button>
+                                    <button class="btn btn-info" ng-click="onCSV()">CSV</button>
+                                    <button class="btn btn-trash" ng-click="onDelete()">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <table class="panel-body sbProjectTableStyle listTable">
+                            <thead>
+                                <tr>
+                                    <!-- <td width="5%">
+                                      <input type="checkbox" ng-checked="selectedRows.length == projectList.entries.length" ng-click="selectAllRows($event, projectList)"/>
+                                    </td> -->
+                                    <td width="15%">Name</td>
+                                    <td width="15%">Company</td>
+                                    <td width="10%">Website</td>
+                                    <td width="15%">Email</td>
+                                    <td width="20%">Address</td>
+                                    <td width="10%">Phone</td>
+                                    <td width="10%">Action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="currentEntry in projectList.entries">
+                                    <!-- <td>
+                                      <input type="checkbox" value="{{currentEntry._id}}" ng-checked="selectedRows.indexOf(currentEntry._id) > -1" ng-click="toggleSelection(currentEntry._id)">
+                                    </td> -->
+                                    <td width="15%" ng-click="toggleSelection(currentEntry._id)">{{currentEntry.name}}</td>
+                                    <td width="15%" ng-click="toggleSelection(currentEntry._id)">{{currentEntry.company}}</td>
+                                    <td width="10%"><a href="{{currentEntry.website}}" target="_blank">Website Link</a></td>
+                                    <td width="15%" ng-click="toggleSelection(currentEntry._id)">{{currentEntry.email}}</td>
+                                    <td width="20%" ng-click="toggleSelection(currentEntry._id)">{{currentEntry.address1?(currentEntry.address1+', '):''}}{{currentEntry.city?(currentEntry.city+', '):''}}{{currentEntry.state?(currentEntry.state+' '):''}}{{currentEntry.zipcode?(currentEntry.zipcode+', '):''}}{{currentEntry.country}}</td>
+                                    <td width="10%" ng-click="toggleSelection(currentEntry._id)">{{currentEntry.phone}}</td>
+                                    <td width="10%"><a ng-click="editEntry(projectList, currentEntry)"><img src="/images/icons/edit_icon.png" height="20px"></a>&nbsp;<a ng-click="removeEntry(projectList, currentEntry)"><img src="/images/icons/remove_icon.png" height="17px" style="margin-top:3px;"></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="tabs row">
+                            <span class="tab"><span>Location</span>: {{(projectList.state || '')}}</span>
+                            <!-- <span class="tab"><span>Industry</span>: {{selectedProject.industry}}</span> -->
+                            <span class="tab"><span>KeyWord</span>: {{projectList.term }}</span>
+                            <span class="tab"><span>Sources</span>: {{ getDataSourceName(projectList.dataSources[0]) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="deleteSuccess">
+    <div class="col-md-12">
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p>{{alertMessage}}</p>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="deleteFail">
+    <div class="col-md-12">
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p>{{alertMessage}}</p>
+        </div>
+    </div>
+</div>

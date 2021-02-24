@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" ng-app="sweetLeads">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SugarBot</title>
+    <meta name="description" content="The best way to generate leads from the best data sources.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css')-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/textAngular.css" type="text/css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ng-tags-input/3.2.0/ng-tags-input.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/ng-table@3.1.0/bundles/ng-table.min.css">
+    <link rel="stylesheet" href="//cdn.rawgit.com/kineticsocial/angularjs-datetime-picker/78c96c74/angularjs-datetime-picker.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css"/>
+    <link rel="stylesheet" href="/stylesheets/angular-slider.css"/>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script>
+    <script src="/javascripts/index.js"></script>
+    <script src="/javascripts/time-ago.js"></script>
+    <script src="https://use.fontawesome.com/2f295ba22d.js"></script>
+    <script src="https://js.stripe.com/v2"></script>
+
+
+    
+    <base href="/">
+</head>
+<body ng-controller="mainController">
+<nav class="navbar navbar-inverse sidebar ng-hide" role="navigation" ng-show="uiState.loggedIn">
+    <div class="project-mark">
+      <img src="images/logos/logo.png" class="logo-mark">
+    </div>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-sidebar-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+            <ul class="nav navbar-nav" ng-show="role=='user'">
+                <li>
+                    <a href="/confectionery">
+                      The Confectionery
+                      <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/confectionary_icon.png' height='20px'/>
+                      </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/projects">
+                      Projects
+                      <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/projects_icon.png' height='20px'/>
+                      </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/blaster">
+                      Blaster
+                      <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/blaster_icon.png' height='20px'/>
+                      </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/settings">
+                      Account
+                      <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/account_icon.png' height='20px'/>
+                      </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/help">
+                      Help
+                      <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/help_icon.png' height='20px'/>
+                      </span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav" ng-show="role=='admin'" style="float:none;">
+                <li>
+                    <a href="/admin/users">
+                      Users
+                      <!-- <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/confectionary_iocon.png' width='20px' height='20px'/>
+                      </span> -->
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/projects">
+                      Projects
+                      <!-- <span style="font-size:16px;" class="pull-right hidden-xs showopacity">
+                        <img src='/images/icons/project icon.png' width='20px' height='20px'/>
+                      </span> -->
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header class="main-header" ng-if="uiState.loggedIn">
+    <div class="user-info">
+        <span> {{getFullname() || user}} | </span>
+        <a href="#" ng-click="goToSugarCash()" ng-if="role=='user'">Sugar Cash: ${{getCredit()}} | </a>
+        <a href="#" ng-click="logout()">
+            Logout
+        </a>
+    </div>
+</header>
+<div class="" ng-class="{main: uiState.loggedIn}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-view autoscroll="true"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-route.min.js"></script>
+<script src="//rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
+<script src="/javascripts/angular-slider.js"></script>
+<script src="/javascripts/angular-payments.js"></script>
+<script src="//cdn.jsdelivr.net/npm/ng-table@3.1.0/bundles/ng-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ng-tags-input/3.2.0/ng-tags-input.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-cookies.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+<script src='javascripts/textAngular-rangy.min.js'></script>
+<script src='javascripts/textAngular-sanitize.min.js'></script>
+<script src='javascripts/textAngular.min.js'></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+<script src="//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyC5Gm3PzDQv5o8qDzze8D_jHFwgNgmC_PA"></script>
+<script src="//cdn.rawgit.com/wpalahnuk/ngAutocomplete/master/src/ngAutocomplete.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+<script src="//cdn.rawgit.com/indrimuska/angular-moment-picker/master/dist/angular-moment-picker.min.js"></script>
+<link href="//cdn.rawgit.com/indrimuska/angular-moment-picker/master/dist/angular-moment-picker.min.css" rel="stylesheet">
+
+<script src="ngapp.js"></script>
+<script src="javascripts/ngProgress.js"></script>
+<script src="services/authorized.service.js"></script>
+<script src="services/login.service.js"></script>
+<script src="services/search.service.js"></script>
+<script src="services/dataSources.service.js"></script>
+<script src="services/data.service.js"></script>
+<script src="services/projectList.service.js"></script>
+<script src="services/project.service.js"></script>
+<script src="services/template.service.js"></script>
+<script src="home/home.js"></script>
+<script src="login/login.js"></script>
+<script src="register/register.js"></script>
+<script src="termsOfUse/termsOfUse.js"></script>
+<script src="policy/policy.js"></script>
+<script src="edit/edit.js"></script>
+<script src="settings/settings.js"></script>
+<script src="list/list.js"></script>
+<script src="confectionery/confectionery.js"></script>
+<script src="blaster/blaster.js"></script>
+<script src="sugarcash/sugarcash.js"></script>
+<script src="help/help.js"></script>
+<script src="projects/projects.js"></script>
+<script src="verify/verify.js"></script>
+<script src="admin/users/users.js"></script>
+<script src="admin/projects/projects.js"></script>
+<script src="//cdn.rawgit.com/kineticsocial/angularjs-datetime-picker/78c96c74/angularjs-datetime-picker.min.js"></script>
+
+</body>
+</html>

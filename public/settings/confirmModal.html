@@ -1,0 +1,28 @@
+<!-- <div class="modal-header">
+    <h3 class="modal-title">Hello</h3>
+</div> -->
+<style>
+  .confirm-container {
+    width: 100%;
+    padding: 30px;
+  }
+  .modal-body {
+    background: #ddd;
+  }
+  .confirm-container .button-wrapper {
+    text-align: center;
+  }
+
+  .confirm-container .button-wrapper .btn{
+    min-width: 80px;
+  }
+</style>
+<div class="modal-body">
+  <div class="confirm-container">
+    <h4><center>{{confirmMessage}}</center></h4><br><br>
+    <div class="button-wrapper">
+        <button class="btn btn-info" type="button" ng-click="ok()">Yes</button>&nbsp;&nbsp;&nbsp;
+        <button class="btn btn-info" type="button" ng-click="cancel()">No</button>
+    </div>
+  </div>
+</div>

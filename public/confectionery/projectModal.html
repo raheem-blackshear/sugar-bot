@@ -1,0 +1,67 @@
+<div class='project-confirm'>
+    <br>
+    <center><img src="/images/logos/cart_logo.png"></center>
+    <button type="button" class="close" ng-click="closeModal(); $event.stopPropagation();">&times;</button>
+    <h3><center>Save your project</center></h3>
+    <div class='list-wrapper'>
+      <div class='col-sm-12'>
+        <div class="alert alert-dismissible alert-warning" ng-show="couponErrorMessage">
+            <p>{{couponErrorMessage}}</p>
+        </div>
+      </div>
+      <div class='col-sm-12'>
+        <select ng-model="selectedProjectId" id="selectedProjectId" class="form-control">
+            <option value="">+ New</option>
+            <option ng-repeat="project in projects" value="{{project._id}}">{{project.name}}</option>
+        </select>
+      </div>
+      <div class='col-sm-12' ng-if="!selectedProjectId">
+          <input type="text" ng-model="projectName" id="projectName" placeholder="Name your project"/>
+      </div>
+      <div class='col-sm-12'>
+          <input type="text" ng-model="listName" id="listName" placeholder="Name your list" style="margin-bottom: 40px;"/>
+      </div>
+    </div>
+    <div class="button-wrapper">
+        <center><button type="button" class="btn btn-pay" ng-click="processPayment();">Save & Continue</button></center>
+    </div>
+</div>
+
+<style>
+    h3 {
+      color: #71818c;
+    }
+    .modal-content {
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(#f0fbff, #cdf1fd);
+    }
+
+    .modal .close {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+    input.ng-invalid {
+        border-color: #f00 !important;
+        outline-color: #f00;
+    }
+
+    .list-wrapper,
+    .coupon-wrapper {
+        padding: 0px 50px;
+    }
+
+    .list-wrapper > div {
+      padding: 10px 20px;
+    }
+
+    .project-confirm input[type=text] {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .project-confirm input::placeholder {
+        color: #bdbdbd;
+    }
+</style>

@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-3">
+        <fieldset><legend><p>Recent Projects</p></legend></fieldset>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3 hoverPointer" ng-repeat="project in projects">
+        <ul class="list-group">
+            <li class="list-group-item active">
+               <h3 class="panel-title">{{project.name}}</h3>
+            </li>
+            <li class="list-group-item">
+                <span class="badge">{{project.dataSources.length}}</span>
+                <h4>Data Sources</h4>
+            </li>
+            <li class="list-group-item listClick hoverPointer" ng-click="selectLists(this)">
+                <span class="badge">{{project.listCount}}</span>
+                 <h4>Lists</h4>
+
+            </li>
+        </ul>
+    </div>
+    <!--removed vAlign-->
+    <div class="col-md-3">
+        <a ng-click="addProject()" class="btn btn-default btn-block hoverPointer" id="addProject">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <h4>Add Project</h4>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="selectedProject">
+        <fieldset><legend>
+        <!--Selected project name-->
+        {{projectName}}
+            </fieldset></legend>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default form-group">
+            <div class="panel-heading">
+                <div class="row">
+                    <label for="select" class="col-md-2 control-label vAlign">Select List</label>
+                    <div class="col-md-6">
+                        <select class="form-control" id="listName" name="listName" ng-model="listSelect.model" ng-change="listDisplay()">
+                            <option ng-repeat="listNames in listSelect.data" value="{{listNames.value}}">
+                                {{listNames.value}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <!--<div class="col-md-2">-->
+                        <!--<button class="btn btn-primary"><a href="/edit" style="color:white">Edit in Sandbox</a></button>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-1">-->
+                        <!--<button class="btn btn-default">Export to Salesforce</button>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Project Details</div>
+                <table class="panel-body table table-bordered table-condensed table-striped table-hover" ng-table="listTable">
+                    <tr ng-repeat="list in $data">
+                        <td title="'Company'" sortable="'company'">{{list.company}}</td>
+                        <td title="'Website'"><a href="{{list.yelp_url}}" target="_blank">Website</a></td>
+                        <td title="'Address'">{{list.address1}}<br/>{{list.address2}}</td>
+                        <td title="'Phone'" sortable="'phone'">{{list.phone}}</td>
+                    </tr>
+                </table>
+                </div>
+    </div>
+</div>
+</div>

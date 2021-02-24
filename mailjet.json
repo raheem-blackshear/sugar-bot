@@ -1,0 +1,7 @@
+{
+  "apikey" : "6f58949bafb8648b17676d37794d8b75",
+  "apisecret": "ccf97c1fe9fa410fa3ffa6c60b793b87",
+  "smtpserver" : "in-v3.mailjet.com",
+  "tls": "optional",
+  "port": 587
+}

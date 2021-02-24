@@ -1,0 +1,110 @@
+<body>
+<div class="container">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="wrapper-sweetness">
+      <form name="registrationForm">
+          <div class="row">
+              <div class="col-md-2">
+                  <a href="http://sugarbot.com/"> <img src="images/logo.png" alt="sugarbot logo homepage" width="300"></a>
+              </div>
+          </div>
+          <div class="row">
+              <h4 class="signUpCaption text-center">Sugarbot<sup><i class="fa fa-registered fa-1"></i></sup> is the world's fastest and easiest way to tap into the world’s best data sources to create business contact and information lists.</h4>              
+              <div class="form-horizontal" ng-show="!submitted">
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="emailAddress" type="email" name="emailAddress"
+                                 ng-model="emailAddress" placeholder="Email" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="password" name="password" ng-model="password"
+                                 placeholder="New Password" type="password" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="passwordConfirm" name="passwordConfirm"
+                                 ng-model="passwordConfirm" placeholder="Confirm Password" type="password"
+                                 required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="signup-address" type="text" name="address"
+                                 ng-model="address" placeholder="Address" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="signup-city" type="text" name="city"
+                                 ng-model="city" placeholder="City" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <select class="form-control" name="state" id="signup-state" ng-model="state" required="required">
+                            <option value="">Select State</option>
+                            <option ng-repeat="(key, value) in states" value="{{key}}">{{value}}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="form-control" id="signup-zipcode" type="text" name="zipcode"
+                                 ng-model="zipcode" placeholder="Zipcode" required="required"/>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <select class="form-control" name="affiliation" id="signup-affiliation" ng-model="affiliation" required="required">
+                            <option value="">Select Affiliation</option>
+                            <option value="MassChallange">MassChallange</option>
+                            <option value="Start-Up Grind">Start-Up Grind</option>
+                            <option value="TechStars">TechStars</option>
+                            <option value="Other">Other</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <input class="" type="checkbox" id="termsOfService" name="termsOfService"
+                                 ng-model="termsOfService" required="required"/>
+                          <label for="termsOfService" class="">I agree to the <a href="/termsOfUse" target="_blank">Terms of
+                              Use</a> and <a href="/policy" target="_blank">Privacy Policy</a></label>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      <div class="row" ng-show="!submitted">
+          <button class="btn btn-info btn-block" ng-click="registerSubmit()"
+                  ng-disabled="!(registrationForm.termsOfService.$valid &amp;&amp;
+                                registrationForm.emailAddress.$valid &amp;&amp;
+                                registrationForm.password.$valid &amp;&amp;
+                                registrationForm.address.$valid &amp;&amp;
+                                registrationForm.city.$valid &amp;&amp;
+                                registrationForm.zipcode.$valid &amp;&amp;
+                                registrationForm.affiliation.$valid &amp;&amp;
+                                registrationForm.state.$valid)">
+            Submit
+          </button>
+      </div>
+      <div class="row" ng-show="submitted">
+        <center><p>Please check verify your account by clicking the link in the email you signed up with.</p></center>
+      </div>
+
+      <div class="col-md-12">
+        <div class="row" ng-show="showAlert">
+          <div class="alert alert-warning">
+            <button class="close" type="button" ng-click="dismissAlert()">&times;</button>
+            <p>{{alertMessage}}</p>
+          </div>
+        </div>
+      </div>
+    </form>
+        </div>
+      </div>
+    </div>
+</body>

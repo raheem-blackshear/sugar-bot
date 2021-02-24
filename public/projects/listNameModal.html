@@ -1,0 +1,44 @@
+<div class='entry-detail'>
+    <h5>List Name</h5>
+    <button type="button" class="close" ng-click="cancel();">&times;</button>
+    <div class='entry-detail-content'>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+                <label class="" for="Name"><b>Please type list name.</b></label>
+                <div class="">
+                    <input class="form-control" id="Name" name="Name" ng-model="listname" type="text"/>
+                </div>
+            </div>
+          </div>
+          <div class='col-sm-12'>
+            <div class="alert alert-dismissible alert-warning" ng-show="errorMessage">
+                <p>{{errorMessage}}</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="button-wrapper">
+        <center><button type="button" class="btn btn-info" ng-click="addList();">Save</button></center>
+    </div>
+</div>
+<style>
+  .entry-detail h5 {
+    background: #eee;
+    margin: 0px;
+    padding: 20px;
+    font-weight: bold;
+    color: gray;
+  }
+  .entry-detail button.close {
+    position: absolute;
+    right: 15px;
+    top: 20px;
+  }
+  .entry-detail .entry-detail-content {
+    margin: 30px;
+  }
+  .entry-detail .button-wrapper {
+    margin: 30px;
+  }
+</style>

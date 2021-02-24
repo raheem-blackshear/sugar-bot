@@ -1,0 +1,3 @@
+nvm install node --reinstall-packages-from=node
+
+export NODE_ENV=production

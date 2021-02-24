@@ -1,0 +1,10 @@
+<table class="table table-bordered table-condensed table-striped table-hover sbTableStyle" ng-table="sweetLeadsParams">
+      <tr ng-repeat="credit in $data">
+        <td width="5%" data-title="'No'">{{$index+1}}</td>
+        <td width="25%" data-title="'Amount'" sortable="'amount'">${{credit.amount.toFixed(2)}}</td>
+        <td width="30%" data-title="'Description'" sortable="'description'">{{credit.description}}</td>
+        <td width="25%" data-title="'Paid On'" sortable="'updatedDate'">{{credit.updatedDate | date:'MM/dd/yyyy h:mma'}}</td>
+        <td width="25%" data-title="'Action'">
+        </td>
+      </tr>
+</table>

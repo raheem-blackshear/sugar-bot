@@ -1,0 +1,440 @@
+<!-- <div class='loading-wrapper' ng-if="loading">
+  <img src="../images/icons/loading.gif">
+  <p>Loading data list...</p>
+</div> -->
+<div class="gray-layer" ng-if="loadingStatus!=0"></div>
+<h3 class="headingTextStyle" ng-if="availableDataSourceParams.length>0">Select a Data Source to create your contact list</h3>
+<div class="sources-panel">
+  <table>
+    <tr>
+      <td ng-repeat="res in availableDataSourceParams">
+        <div class="source-item">
+          <div class="source-logo">
+              <img class="vAlign" src="{{res.logos}}">
+          </div>
+          <div class="source-description">
+            <p class="dsTitleAvailable">{{res.title}}</p>
+            <div class="row">
+                {{res.description}}
+            </div>
+          </div>
+          <div class="source-pricing">
+              <div class="text-center">
+                  <button class='btn btn-orange1' ng-if="res.title.indexOf('Factual')>=0 || res.title.indexOf('D&B')>=0">Coming Soon</button>
+                  <button class='btn btn-activate' ng-class="res.active?'activated':''" ng-if="res.title.indexOf('Factual')<0 && res.title.indexOf('D&B')<0 && checkAvailable(res)" ng-click='activateDataSource(res)'>Activate</button>
+                  <button class='btn btn-info' ng-if="res.title.indexOf('Factual')<0 && res.title.indexOf('D&B')<0 && !checkAvailable(res)">Disabled</button>
+              </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<br>
+<h3 class="headingTextStyle" ng-if="availableDataSourceParams.length>0">Enter search tags</h3>
+<div class="search-panel" ng-if="availableDataSourceParams.length>0">
+  <div class="row">
+    <div class="col-md-6 search-wrapper">
+      <img src='/images/icons/search_icon.png' width='35px' height='35px'/>
+      <!-- <tags-input ng-model="inputKeywordTags" placeholder="Keyword (e.g. Restaurant)" max-tags="3" replace-spaces-with-dashes="false" on-tag-added="getSearchResults()"
+      on-tag-removed="getSearchResults()"></tags-input> -->
+      <tags-input ng-model="inputKeywordTags" placeholder="Keyword (e.g. Restaurant)" max-tags="3" replace-spaces-with-dashes="false""></tags-input>
+    </div>
+    <div class="col-md-6 search-wrapper">
+      <!-- <span class="sticker">|</span><input type="text" ng-autocomplete ng-model="SelectedLocation" placeholder="Location (e.g. New York)" options="options" ng-blur="getSearchResults()"/> -->
+      <span class="sticker">|</span><input type="text" ng-autocomplete id="SelectedLocation" ng-model="SelectedLocation" placeholder="Location (e.g. New York)" options="options" autocomplete="on"/>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row" ng-if="availableDataSourceParams.length>0">
+  <h3 class="headingTextStyle col-md-7">
+    Refine Search Area
+  </h3>
+  <div class="sliderWrapper col-md-5">
+    <rzslider rz-slider-model="slider.value"
+          rz-slider-options="slider.options"></rzslider>
+  </div>
+</div>
+<div class="google-map-wrapper" ng-if="availableDataSourceParams.length>0">
+  <ng-map zoom="10" zoom-control=true center="{{position.lat}},{{position.lng}}">
+    <marker position="{{position.lat}},{{position.lng}}" ng-if="position.isSelected"></marker>
+    <shape name="rectangle"
+       stroke-color="#32424d"
+       stroke-opacity="0.8"
+       stroke-weight="2"
+       fill-color="#ffffff"
+       fill-opacity="0.35"
+       bounds="[
+         [{{position.lat - 0.0163 * slider.value / 2}}, {{position.lng - 0.019 * slider.value / 2}}],
+         [{{position.lat + 0.0163 * slider.value / 2}}, {{position.lng + 0.019 * slider.value / 2}}]
+       ]" ng-if="position.isSelected">
+    </shape>
+  </ng-map>
+</div>
+<h3 class="headingTextStyle" ng-if="availableDataSourceParams.length>0">
+  <center>
+    <button class='btn btn-search' ng-click="getSearchResults()">Search</button>
+  </center>
+</h3>
+<br>
+
+<div class="progress-bar-wrapper" ng-if="loadingStatus!=0">
+  <h4 class="headingTextStyle"><center><b>Gathering your data records...</b></center></h4>
+  <p><center>SugarBot is gathering records from your search.<br>This may take a few minutes, but please standby<br>we're working hard.</center></p><br>
+  <div class="progress-wrapper">
+    <div class="fill-progress-wrapper" ng-style="progressWidth"></div>
+  </div>
+</div>
+
+<div class="row" ng-if="sweetLeadsData.length>0 && loadingStatus==0">
+    <div class="col-md-6">
+        <h3 class="headingTextStyle">Total Records: {{sweetLeadsData.length}}</h3>
+    </div>
+    <div class="col-md-6">
+        <h3 class="purchaseTextStyle"><span ng-click="openPayment()">Continue to Save <img src="/images/icons/next_step_icon.png" width="30px" height="30px"></span></h3>
+    </div>
+</div>
+<div class="row" ng-if="sweetLeadsData.length>0 && loadingStatus==0">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <!-- <div class="panel-heading">Sweet Leads</div> -->
+            <!-- <button id="confectioneryNextButton" class="btn" ng-click="confectioneryNext()"
+                ng-disabled="!(projectName && hasSubscriptions && hasSelections)">Save</button> -->
+
+            <table class="table table-bordered table-condensed table-striped table-hover sbTableStyle"
+                   ng-table="sweetLeadsParams" id="leads-table">
+                <tr ng-repeat="res in $data">
+                    <!-- <td class="text-center" header="'ng-table/headers/checkbox.html'">
+                        <input type="checkbox" ng-model="checkboxes.items[res.rowNumber]"/>
+                    </td> -->
+                    <td width="15%" sortable="'name'" data-title="'Name'">{{res.name}}</td>
+                    <td width="15%" sortable="'company'" data-title="'Title'">{{res.company}}</td>
+                    <td width="15%" sortable="'website'" data-title="'Website'" ng-class="{ 'blur': !hasSubscriptions }"><a href="{{res.website}}" target="_blank">Website Link</a></td>
+                    <td width="20%" sortable="'address'" data-title="'Address'" ng-class="{ 'blur': !hasSubscriptions }">{{res.address1}}</br>{{res.address2}}</td>
+                    <td width="15%" sortable="'email'" data-title="'Email'" ng-class="{ 'blur': !hasSubscriptions }">{{res.email}}</td>
+                    <td width="15%" sortable="'phone'" data-title="'Phone'" ng-class="{ 'blur': !hasSubscriptions }">{{res.phone}}</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="form-group">
+        <div class="confection-info" ng-show="!reqModel._id">
+            <h1 class="project-name" ng-show="!isEditingName" ng-click="toggleEditName()" >
+              <span ng-bind="projectName || 'Enter Project Name'"></span>
+            </h1>
+            <div class="input-wrapper" ng-show="isEditingName">
+                <input type="text" class="form-control" name="projectName" id="confProjectName" ng-model="projectName" required="required" placeholder="Enter Project Name" maxlength="50" ng-enter="toggleEditName();"/>
+            </div>
+            <div class="btn-wrapper" ng-show="isEditingName">
+              <a ng-click="toggleEditName()" class="btn btn-no-border"><i class="fa fa-check"></i></a>
+              <a ng-click="cancelEditName()" class="btn btn-no-border"><i class="fa fa-remove"></i></a>
+            </div>
+        </div>
+        <div class="confection-info" ng-show="reqModel._id">
+            <h1 class="project-name">
+              <span ng-bind="projectName"></span>
+            </h1>
+        </div>
+    </div>
+</div> -->
+<!-- <div class="row">
+    <div class="col-md-12">
+        <p class="headingTextStyle">Focus</p>
+    </div>
+</div> -->
+<!-- <div class="row">
+    <div class="panel">
+        <div class="panel-heading sbPanelHeadingStyle">
+            <p class="sbPanelHeadingText">Industry and Geography</p>
+        </div>
+        <div class="col-md-7">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12 textBoxContainer">
+                                <p class="textBoxLabel">Industry</p>
+                            </div>
+                        </div>
+                        <select class="form-control" id="industry" name="industrySelect"
+                                ng-model="industrySelect.model"
+                                ng-change="industrySelect()">
+                            <option value="" disabled selected>All</option>
+                            <option ng-repeat="option in industrySelect.data" value="{{option.alias}}">
+                                {{option.title}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 textBoxContainer">
+                                    <p class="textBoxLabel">Sub Industry</p>
+                                </div>
+                            </div>
+                            <select class="form-control" id="subindustry" name="subindustrySelect"
+                                    ng-model="subindustrySelect.model" ng-change="subindustrySelect()">
+                                <option ng-repeat="option in subindustrySelect.data" value="{{option.alias}}">
+                                    {{option.title}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="subsubIndustryVisible">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 textBoxContainer">
+                                    <p class="textBoxLabel">Sub-sub Industry</p>
+                                </div>
+                            </div>
+                            <select class="form-control" id="subsubindustry" name="subsubindustrySelect"
+                                    ng-model="subsubindustrySelect.model">
+                                <option ng-repeat="option in subsubindustrySelect.data"
+                                        value="{{option.alias}}">
+                                    {{option.title}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+      	 <!-- <div class="col-md-5">
+            <div class="row">
+                <div class="form-group"> -->
+                    <!-- <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12 textBoxContainer">
+                                <p class="textBoxLabel">State</p>
+                            </div>
+                        </div>
+                        <select class="form-control" id="state" name="state" ng-model="statesSelect.model" ng-change="statesChange()">
+                            <option ng-repeat="option in statesSelect.data" value="{{option.value}}">
+                                {{option.value}}
+                            </option>
+                        </select>
+                    </div> -->
+                    <!-- <div class="form-group">
+                    <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 textBoxContainer">
+                                    <p class="textBoxLabel">City</p>
+                                </div>
+                            </div>
+                            <input class="form-control" id="city" name="city" ng-model="city" ng-blur="statesChange()" placeholder="City"/>
+                        </div>
+                    </div> -->
+                <!-- </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="row">
+    <div class="col-md-12">
+        <br>
+    </div>
+</div> -->
+<!-- <div class="row">
+    <div class="form-group">
+        <div class="confection-list-info">
+            <h1 class="project-name" ng-show="!isEditingListName" ng-click="toggleEditListName()" >
+              <span ng-bind="listName || 'Enter List Name'"></span>
+            </h1>
+            <div class="input-wrapper" ng-show="isEditingListName">
+                <input type="text" class="form-control" name="listName" id="confListName" ng-model="listName" required="required" placeholder="Enter List Name" maxlength="50" ng-enter="toggleEditListName();"/>
+            </div>
+            <div class="btn-wrapper" ng-show="isEditingListName">
+              <a ng-click="toggleEditListName()" class="btn btn-no-border"><i class="fa fa-check"></i></a>
+              <a ng-click="cancelEditListName()" class="btn btn-no-border"><i class="fa fa-remove"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="saveErrorMessage">
+    <div class="alert alert-dismissible alert-warning">
+        <p>{{saveErrorMessage}}</p>
+    </div>
+</div>
+<div class="row tags-section">
+    <div class="panel panel-info">
+        <div class="panel-heading flex">
+            <div>Search tags</div>
+            <div class='question-mark tooltip'>
+                ?
+                <span class="tooltiptext">Control cost by using search tags to forcus the industry and geograph.
+                    For example, use a zip code or specific city.
+                </span>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="row">
+                <div class="col-sm-8 search-tags">
+                    <div class="search-wrapper">
+                        <!-- <input type="text" ng-autocomplete ng-model="SelectedLocation" placeholder="Location (e.g. New York)" options="options" ng-blur="getSearchResults()"/>
+                    </div>
+                    <div class="search-wrapper">
+                        <!-- <input type="text" ng-model="SelectedKeyword" placeholder="Keyword (i.e Restaurant)" ng-blur="getSearchResults()"/>
+                        <div class="flex align-center">
+                            <!-- <span>Keyword Tags</span> -->
+                            <!-- <tags-input ng-model="inputKeywordTags" placeholder="Keyword (e.g. Restaurant)" max-tags="5" replace-spaces-with-dashes="false" on-tag-added="getSearchResults()"
+                            on-tag-removed="getSearchResults()"></tags-input> -->
+                            <!-- <a class="clear-tags btn btn-no-border" ng-click="inputKeywordTags = []">Clear</a>
+                        </div>
+                    </div>
+                    <!-- <div class="flex align-center">
+                        <span>Location Tags</span>
+                        <tags-input ng-model="inputLocationTags" replace-spaces-with-dashes="false" on-tag-added="getSearchResults()"
+                        on-tag-removed="getSearchResults()"></tags-input>
+                        <a class="clear-tags btn btn-no-border" ng-click="inputLocationTags = []">Clear</a>
+                    </div>
+                    <div class="flex align-center">
+                        <span>Industry Tags</span>
+                        <tags-input ng-model="inputIndustryTags" replace-spaces-with-dashes="false" on-tag-added="getSearchResults()"
+                        on-tag-removed="getSearchResults()"></tags-input>
+                        <a class="clear-tags btn btn-no-border" ng-click="inputIndustryTags = []">Clear</a>
+                    </div>
+                    <div class="flex align-center">
+                        <span>Keyword Tags</span>
+                        <tags-input ng-model="inputKeywordTags" replace-spaces-with-dashes="false" on-tag-added="getSearchResults()"
+                        on-tag-removed="getSearchResults()"></tags-input>
+                        <a class="clear-tags btn btn-no-border" ng-click="inputKeywordTags = []">Clear</a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="calculator-wrapper">
+                        <p>Total Records: {{sweetLeadsData.length ? calculatedRates.totalCount : '0' }}</p>
+                        <div class="calculator-summary">
+                          <div class="row">
+                            <div class="col-md-6 item-title">Price:</div>
+                            <div class="col-md-4 item-price">${{ sweetLeadsData.length ? calculatedRates.price.toFixed(2) : '0.00' }}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 item-title">Sugar Cash:</div>
+                            <div class="col-md-4 item-price">
+                              <input type="text" ng-model="sugarCash" name="sugarcash" id="sugarcash" ng-focus="focusSugarCash();" ng-enter="blurSugarCash()" ng-blur="blurSugarCash()">
+                            </div>
+                          </div>
+                          <div class="row" ng-show="calculatedRates.discount">
+                            <div class="col-md-6 item-title">Discount:</div>
+                            <div class="col-md-4 item-price">${{ calculatedRates.discount ? calculatedRates.discount.toFixed(2) : '0.00' }}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 item-title">Tax:</div>
+                            <div class="col-md-4 item-price">${{ sweetLeadsData.length ? calculatedRates.tax.toFixed(2) : '0.00' }}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 item-title">Total:</div>
+                            <div class="col-md-4 item-price">${{ sweetLeadsData.length ? calculatedRates.total.toFixed(2) : '0.00' }}</div>
+                          </div>
+                        </div>
+                        <div class="calculator-buttons text-center">
+                            <!-- <button class="btn btn-info" ng-click="confectioneryNext()">Save</button> -->
+                            <!-- <button class="btn btn-info" ng-click="confectioneryNext()"
+                                ng-disabled="!(projectName && hasSubscriptions && hasSelections)">Save</button>
+                            <button class="btn btn-green" ng-click="openPayment()" ng-show="!hasSubscriptions">Purchase</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p class="headingTextStyle">Data Sources</p>
+    </div>
+</div>
+<div class="row panel-data-sources">
+    <div class="panel panel-info">
+        <div class="panel-heading flex">
+            <div class="flex-item-40">Active Data Sources</div>
+            <div class="flex-item-60 ml-20">Recommended Data Sources</div>
+        </div>
+        <div class="panel-content flex">
+            <div class="flex-item-40 data-source-list-wrapper">
+                <br>
+                <div class="row">
+                  <div class="col-md-2">&nbsp;</div>
+                  <div class="col-md-8 progress-bar-wrapper">
+                    <div class="progress-wrapper"></div>
+                    <div class="fill-progress-wrapper" ng-style="progressWidth"></div>
+                    <div class="animation-wrapper"></div>
+                  </div>
+                  <div class="col-md-2">&nbsp;</div>
+                </div>
+                <div class="row">
+                  <p><center>{{progressStatus[loadingStatus].text}}</center></p>
+                </div>
+                <div ng-repeat="res in subscribedDataSourceParams" class="active-data-source">
+                    <div class="text-center">
+                        <img class="vAlign" src="{{res.logos}}">
+                    </div>
+                    <div>
+                        <button class="btn btn-sm center-block btn-info" ng-click="disconnectDataSource(res)">Disconect</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-item-60 data-source-list-wrapper ml-20">
+                <div ng-repeat="res in availableDataSourceParams" class="available-data-source flex">
+                    <div class="col-sm-3 col-md-3 source-logo">
+                        <img class="vAlign" src="{{res.logos}}">
+                    </div>
+                    <div class="col-sm-6 col-md-6 source-description">
+                      <p class="dsTitleAvailable">{{res.title}}</p>
+                      <div class="row">
+                          {{res.description}}
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-md-3 flex align-center source-pricing">
+                        <div class="flex-item-40 text-right">
+                            <button class='btn btn-orange buy-btn' ng-if="res.title.indexOf('Factual')>=0 || res.title.indexOf('D&B')>=0" style="font-size:10px; padding:8px 5px;">Coming Soon</button>
+                            <button class='btn btn-green buy-btn' ng-if="res.title.indexOf('Factual')<0 && res.title.indexOf('D&B')<0 && checkAvailable(res)" ng-click='activateDataSource(res)'>Activate</button>
+                            <button class='btn btn-info buy-btn' ng-if="res.title.indexOf('Factual')<0 && res.title.indexOf('D&B')<0 && !checkAvailable(res)">Disabled</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p class="headingTextStyle">Total Records: {{sweetLeadsData.length}}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <!--<div class="panel-heading">Sweet Leads</div>-->
+            <!-- <button id="confectioneryNextButton" class="btn" ng-click="confectioneryNext()"
+                ng-disabled="!(projectName && hasSubscriptions && hasSelections)">Save</button>
+``
+            <table class="table table-bordered table-condensed table-striped table-hover sbTableStyle"
+                   ng-table="sweetLeadsParams" id="leads-table">
+                <tr ng-repeat="res in $data">
+                    <!-- <td class="text-center" header="'ng-table/headers/checkbox.html'">
+                        <input type="checkbox" ng-model="checkboxes.items[res.rowNumber]"/>
+                    </td> -->
+                    <!-- <td width="15%" sortable="'name'" data-title="'Name'">{{res.name}}</td>
+                    <td width="15%" sortable="'company'" data-title="'Company'">{{res.company}}</td>
+                    <td width="15%" sortable="'website'" data-title="'Website'" ng-class="{ 'blur': !hasSubscriptions }"><a href="{{res.website}}" target="_blank">Website Link</a></td>
+                    <td width="15%" sortable="'email'" data-title="'Email'" ng-class="{ 'blur': !hasSubscriptions }">{{res.email}}</td>
+                    <td width="20%" sortable="'address'" data-title="'Address'" ng-class="{ 'blur': !hasSubscriptions }">{{res.address1}}</br>{{res.address2}}</td>
+                    <td width="15%" sortable="'phone'" data-title="'Phone'" ng-class="{ 'blur': !hasSubscriptions }">{{res.phone}}</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div> -->
+
+<!-- <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
+</script> -->
